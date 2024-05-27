@@ -48,7 +48,7 @@ This will result in the following object being generated:
     'attributes.mainlyMachine': true
 }
 ```
-**NOTE** that this is an entrely new object and has no referrence the to existing object anymore.
+**NOTE** that this is an entrely new object and has no referrence to the existing object anymore.
 
 It is possible to flatten values that are arrays. For example:
 
