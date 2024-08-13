@@ -12,7 +12,7 @@ type FlatUnitType =
   | 'symbol'
   | 'undefined'
 
-type FlatUnit = {
+export type FlatUnit = {
   get: <T>(key?: string) => T
   result: () => Record<string, any>
   set: <T>(key: string, value: T) => void
