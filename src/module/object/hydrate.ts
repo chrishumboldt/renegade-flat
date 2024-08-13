@@ -1,6 +1,8 @@
-import { isObject } from '@module/is'
+import { isObject } from '../is'
 
-export function objectHydrate(input: Record<string, any>): Record<string, any> {
+type HydrateInput = Record<string, any>
+
+export function objectHydrate<T = unknown>(input: HydrateInput): T {
   let newObject = {}
 
   for (let key in input) {
@@ -21,30 +23,29 @@ export function objectHydrate(input: Record<string, any>): Record<string, any> {
     })
   }
 
-  return newObject
+  return objectHydrateAllArrays<T>(newObject)
 }
 
-export function objectHydrateAllArrays(input: Record<string, any>): any {
-  for (let key in input) {
-    if (isObject(input[key])) {
-      input[key] =
-        Object.keys(input[key]).shift() === '0'
-          ? hydrateArray(input[key])
-          : objectHydrateAllArrays(input[key])
-    }
-  }
-
-  return input
-}
-
-function hydrateArray(input: Record<string, any>): any[] {
-  const newArray: any[] = []
+export function objectHydrateArray<T = unknown>(input: HydrateInput): T[] {
+  const newArray: T[] = []
 
   for (let key in input) {
-    newArray[parseInt(key)] = isObject(input[key])
-      ? objectHydrateAllArrays(input[key])
-      : input[key]
+    newArray.push(input[key])
   }
 
   return newArray
+}
+
+function objectHydrateAllArrays<T = unknown>(input: HydrateInput): T {
+  for (let key in input) {
+    if (isObject(input[key])) {
+      if (Object.keys(input[key])[0] === '0') {
+        input[key] = objectHydrateArray(input[key])
+      } else {
+        input[key] = objectHydrateAllArrays(input[key])
+      }
+    }
+  }
+
+  return input as T
 }

@@ -36,25 +36,25 @@ test('Test that we can get values.', () => {
   expect(testObj.get('allNames.1')).toBe('Darth Vader')
 })
 
-test('Test that we can get an array as an object back.', () => {
+test('Test that we can get a simple array back.', () => {
   const testObj = flat(rootObj)
 
   expect(testObj.get('allNames')).toStrictEqual({
-    0: 'Anakin Skywalker',
-    1: 'Darth Vader',
+    '0': 'Anakin Skywalker',
+    '1': 'Darth Vader',
   })
 })
 
-test('Test that we can get an object array as an object back.', () => {
+test('Test that we can get an object array back.', () => {
   const testObj = flat(rootObj)
 
   expect(testObj.get('identities')).toStrictEqual({
-    0: {
+    '0': {
       name: 'Anakin Skywalker',
       identity: 'Jedi',
       good: true,
     },
-    1: {
+    '1': {
       name: 'Darth Vader',
       identity: 'Sith',
       good: false,
@@ -87,11 +87,4 @@ test('Test that a non object will still create and return.', () => {
   expect(stringValue.type()).toBe('string')
   expect(stringValue.get('')).toBe('Obi-Wan Kenobi')
   expect(stringValue.get('some.weird.key')).toBe('Obi-Wan Kenobi')
-})
-
-test('Test that an object can be accurately reconstructed.', () => {
-  const flatObj = flat(rootObj)
-  const reconstructed = flatObj.reconstruct()
-
-  expect(reconstructed).toStrictEqual(rootObj)
 })

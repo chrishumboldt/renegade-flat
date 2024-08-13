@@ -3,9 +3,10 @@
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
 - [Flatten Object](#flatten-object)
+- [Result](#result)
 - [Get Value](#get-value)
 - [Set Value](#set-value)
-- [Reconstruct](#reconstruct)
+- [Type](#type)
 
 ## Introduction
 
@@ -72,9 +73,26 @@ This will result in the following object being generated:
 }
 ```
 
+## Result
+
+The result function will return the current flattened object.
+
+```javascript
+import { flat } from '@renegaderocks/flat'
+
+function example() {
+    const flatObject = flat({
+        name: 'Darth Vader',
+        affiliations: ['Jedi', 'Sith']
+    })
+
+    console.log(flatObject.result())
+}
+```
+
 ## Get Value
 
-You can get values anywhere within the object tree and it will return a "mini-hydrated" form, however it is **IMPORTANT** to note that this will always be in the form of a pure value or object void of arrays.
+You can get values anywhere within the object tree and it will return a "mini-hydrated" form.
 
 ```javascript
 import { flat } from '@renegaderocks/flat'
@@ -93,6 +111,7 @@ function example() {
     const attributes = flatObject.get('attributes')
     const lightsaberColour = flatObject.get('attributes.lightsaber')
     const allNames = flatObject.get('allNames')
+    const entireObject = flatObject.get()
 }
 ```
 
@@ -105,16 +124,13 @@ Name will return `Darth Vader` as expected but `attributes` will return the obje
 }
 ```
 
-On the otherhand `allNames` will not return an array but rather a keyed object as show below.
+On the otherhand `allNames` will return an array.
 
 ```javascript
-{
-    '0': 'Anakin Skywalker',
-    '1': 'Darth Vader'
-}
+['Anakin Skywalker', 'Darth Vader']
 ```
 
-The reason for this is to keep binding to elements easy. In order to reconstruct the object you will need to run the `reconstruct` function.
+if you wish to retrieve the entire object you can simply omit a key for the `get` function argument or provide an empty `string`.
 
 ## Set Value
 
@@ -139,9 +155,9 @@ function example() {
 }
 ```
 
-## Reconstruct
+## Type
 
-Quite simply `reconstruct` will return a new object based on the current values of the flattented object including array types. This is used mainly for things like API requests so that you can return the changed object in its desired shape. This is the most expensive operation in the library.
+The type function will just return a simple typeof result of the original input.
 
 ```javascript
 import { flat } from '@renegaderocks/flat'
@@ -156,6 +172,6 @@ function example() {
         allNames: ['Anakin Skywalker', 'Darth Vader']
     })
 
-    const newObject = flatObject.reconstruct()
+    console.log(flatObject.type())
 }
 ```

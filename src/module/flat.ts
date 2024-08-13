@@ -1,6 +1,6 @@
 import { isArray, isString } from './is'
 import { objectFlatten } from './object/flatten'
-import { objectHydrate, objectHydrateAllArrays } from './object/hydrate'
+import { objectHydrate } from './object/hydrate'
 
 type FlatUnitType =
   | 'bigint'
@@ -13,8 +13,8 @@ type FlatUnitType =
   | 'undefined'
 
 type FlatUnit = {
-  get: <T>(key: string) => T
-  reconstruct: <T = Record<string, any>>() => T
+  get: <T>(key?: string) => T
+  result: () => Record<string, any>
   set: <T>(key: string, value: T) => void
   type: () => FlatUnitType
 }
@@ -50,10 +50,6 @@ export function flat(input: any): FlatUnit {
     return flatObject[key]
   }
 
-  function reconstruct() {
-    return objectHydrateAllArrays(get(''))
-  }
-
   function set(key: string, value: any) {
     if (!isString(key) || key.length < 1) {
       return
@@ -72,7 +68,7 @@ export function flat(input: any): FlatUnit {
 
   return {
     get,
-    reconstruct,
+    result: () => flatObject,
     set,
     type,
   }

@@ -1,1 +1,1 @@
-export * from '@module/flat'
+export * from './module/flat'

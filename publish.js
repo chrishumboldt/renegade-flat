@@ -3,8 +3,8 @@ const { spawn } = require('child_process')
 const package = 'Renegade Flat'
 
 const commands = [
-  `bun test`,
-  `bun run build`,
+  `npm run test`,
+  `npm run build`,
   `echo "Build complete!"`,
   `npm publish --access public`,
   `echo "Publish complete!"`,

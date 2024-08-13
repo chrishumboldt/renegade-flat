@@ -1,4 +1,4 @@
-import { isArray, isObject } from '@module/is'
+import { isArray, isObject } from '../is'
 
 export const objectFlatten = (
   record: Record<string, any>,
