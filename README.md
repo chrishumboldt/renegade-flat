@@ -130,7 +130,7 @@ On the otherhand `allNames` will return an array.
 ['Anakin Skywalker', 'Darth Vader']
 ```
 
-if you wish to retrieve the entire object you can simply omit a key for the `get` function argument or provide an empty `string`.
+If you wish to retrieve the entire object you can simply omit a key for the `get` function argument or provide an empty `string`.
 
 ## Set Value
 
