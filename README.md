@@ -6,6 +6,7 @@
 - [Result](#result)
 - [Get Value](#get-value)
 - [Set Value](#set-value)
+- [Upsert](#upsert)
 - [Type](#type)
 
 ## Introduction
@@ -152,6 +153,27 @@ function example() {
     flatObject.set('name', 'Anakin Skywalker')
     flatObject.set('attributes.lightsaber', 'blue')
     flatObject.set('allNames.0', 'Ani')
+}
+```
+
+## Upsert
+
+In the event that you don't want to set individual keys, you can pass in an object to upsert against the flat. This is a faster way of adding to the flat without having to set each individual key.
+
+```javascript
+import { flat } from '@renegaderocks/flat'
+
+function example() {
+    const flatObject = flat({
+        name: 'Darth Vader',
+        allNames: ['Anakin Skywalker', 'Darth Vader']
+    })
+    flatObject.upsert({
+        attributes: {
+            lightsaber: 'red',
+            mainlyMachine: true
+        },
+    })
 }
 ```
 
