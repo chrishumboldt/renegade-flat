@@ -95,3 +95,24 @@ test('Test that a non object will still create and return.', () => {
   expect(stringValue.get('')).toBe('Obi-Wan Kenobi')
   expect(stringValue.get('some.weird.key')).toBe('Obi-Wan Kenobi')
 })
+
+test('Test that we can upsert a flat object.', () => {
+  const newFlat = flat({
+    name: 'Darth Vader',
+  })
+  const upsertExecution = newFlat.upsert({
+    attributes: {
+      lightsaber: 'red',
+      isSith: true,
+    },
+  })
+
+  expect(upsertExecution).toBe(true)
+  expect(newFlat.get('name')).toBe('Darth Vader')
+  expect(newFlat.get('attributes.lightsaber')).toBe('red')
+  expect(newFlat.get('attributes.isSith')).toBe(true)
+  expect(newFlat.get('attributes')).toStrictEqual({
+    lightsaber: 'red',
+    isSith: true,
+  })
+})

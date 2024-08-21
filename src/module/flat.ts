@@ -1,4 +1,4 @@
-import { isArray, isString } from './is'
+import { isArray, isObject, isString } from './is'
 import { objectFlatten } from './object/flatten'
 import { objectHydrate } from './object/hydrate'
 
@@ -15,8 +15,9 @@ type FlatUnitType =
 export type FlatUnit = {
   get: <T>(key?: string) => T
   result: () => Record<string, any>
-  set: <T>(key: string, value: T) => void
+  set: <T>(key: string, value: T) => boolean
   type: () => FlatUnitType
+  upsert: (input: Record<string, any>) => boolean
 }
 
 export function flat(input: any): FlatUnit {
@@ -50,16 +51,22 @@ export function flat(input: any): FlatUnit {
     return flatObject[key]
   }
 
-  function set(key: string, value: any) {
-    if (!isString(key) || key.length < 1) {
-      return
-    }
+  function set(key: string, value: any): boolean {
+    if (!isString(key) || key.length < 1) return false
 
     flatObject[key] = value
+    return true
   }
 
   function type(): FlatUnitType {
     return inputType
+  }
+
+  function upsert(input: Record<string, any>): boolean {
+    if (!isObject(input)) return false
+
+    Object.assign(flatObject, objectFlatten(input))
+    return true
   }
 
   if (isValid) {
@@ -71,5 +78,6 @@ export function flat(input: any): FlatUnit {
     result: () => flatObject,
     set,
     type,
+    upsert,
   }
 }
