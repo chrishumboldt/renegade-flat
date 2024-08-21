@@ -4,8 +4,7 @@ const package = 'Renegade Flat'
 
 const commands = [
   `npm run test`,
-  `npm run build`,
-  `echo "Build complete!"`,
+  `echo "Test complete!"`,
   `npm publish --access public`,
   `echo "Publish complete!"`,
 ]
