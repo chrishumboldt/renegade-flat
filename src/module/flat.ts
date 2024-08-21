@@ -34,7 +34,7 @@ export function flat(input: any): FlatUnit {
     }
 
     const keys = Object.keys(flatObject).filter(item => item.startsWith(key))
-    if (keys.length > 1) {
+    if (keys.length > 1 || (keys.length === 1 && keys[0] !== key)) {
       const newObject = keys.reduce(
         (crt: Record<string, any>, accKey: string) => {
           const cleanKey = accKey.replace(`${key}.`, '')

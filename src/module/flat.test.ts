@@ -1,18 +1,23 @@
 import { flat } from './flat'
 
+const rootObjAttributes = {
+  alive: false,
+  blade: 'red',
+  cyberware: {
+    arm: {
+      left: true,
+      right: true,
+    },
+  },
+}
+const rootObjCyberware = {
+  breath: 'loud',
+}
 const rootObj = {
   name: 'Darth Vader',
   allNames: ['Anakin Skywalker', 'Darth Vader'],
-  attributes: {
-    alive: false,
-    blade: 'red',
-    cyberware: {
-      arm: {
-        left: true,
-        right: true,
-      },
-    },
-  },
+  attributes: rootObjAttributes,
+  cyberware: rootObjCyberware,
   identities: [
     {
       name: 'Anakin Skywalker',
@@ -32,7 +37,9 @@ test('Test that we can get values.', () => {
 
   expect(testObj.type()).toBe('object')
   expect(testObj.get('name')).toBe('Darth Vader')
+  expect(testObj.get('attributes')).toStrictEqual(rootObjAttributes)
   expect(testObj.get('attributes.alive')).toBe(false)
+  expect(testObj.get('cyberware')).toStrictEqual(rootObjCyberware)
   expect(testObj.get('allNames.1')).toBe('Darth Vader')
 })
 
