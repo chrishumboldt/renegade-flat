@@ -1,21 +1,28 @@
 {
   "name": "@renegaderocks/flat",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Create and interact with flattened Javascript objects.",
-  "main": "dist/main.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "!dist/**/*.test.js",
+    "!dist/**/*.test.d.ts"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "build": "npm run clean && npm run check:types && npm run build:code && npm run build:types",
-    "build:code": "./node_modules/.bin/esbuild ./src/main.ts --bundle --minify --platform=node --outfile=./dist/main.js",
-    "build:types": "tsc --emitDeclarationOnly --declaration",
-    "distribute": "npm run test && npm run build && npm publish --access public",
-    "check:types": "tsc -noEmit",
-    "clean": "rm -rf dist",
-    "test": "jest --verbose",
-    "test:watch": "jest --verbose --watchAll"
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && tsc",
+    "pretest": "npm run build",
+    "test": "node --test dist/*.test.js",
+    "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrishumboldt/renegade-flat.git"
+    "url": "https://github.com/chrishumboldt/renegade-flat"
   },
   "keywords": [
     "Renegade",
@@ -27,17 +34,13 @@
     "Reconstruct"
   ],
   "author": "Chris Humboldt",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/chrishumboldt/renegade-flat/issues"
   },
   "homepage": "https://github.com/chrishumboldt/renegade-flat#readme",
   "devDependencies": {
-    "@types/jest": "^29.5.1",
-    "esbuild": "^0.17.18",
-    "jest": "^29.5.0",
-    "prettier": "^3.3.3",
-    "ts-jest": "^29.1.0",
-    "typescript": "^5.0.4"
+    "@types/node": "^18.19.0",
+    "prettier": "2",
+    "typescript": "^5.9.3"
   }
 }

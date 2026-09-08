@@ -8,10 +8,11 @@
 - [Set Value](#set-value)
 - [Upsert](#upsert)
 - [Type](#type)
+- [Behaviour Notes](#behaviour-notes)
 
 ## Introduction
 
-The Renegade flat libray has been created to solve a very specific proplem. Allow the two way binding of data against a nested object for the sake of presentation. As with most reactive libraries the object reference is used to check for change. This will often require the use of hacks in order to get the data to bind to a nested property. 
+The Renegade flat library has been created to solve a very specific problem. Allow the two way binding of data against a nested object for the sake of presentation. As with most reactive libraries the object reference is used to check for change. This will often require the use of hacks in order to get the data to bind to a nested property. 
 
 So instead of referencing something deeply nested, it is now possible to reference the key directly. See examples of the returned objects to get the gist.
 
@@ -50,7 +51,7 @@ This will result in the following object being generated:
     'attributes.mainlyMachine': true
 }
 ```
-**NOTE** that this is an entrely new object and has no referrence to the existing object anymore.
+**NOTE** that this is an entirely new object and has no reference to the existing object anymore.
 
 It is possible to flatten values that are arrays. For example:
 
@@ -116,7 +117,7 @@ function example() {
 }
 ```
 
-Name will return `Darth Vader` as expected but `attributes` will return the object as show below.
+Name will return `Darth Vader` as expected but `attributes` will return the object as shown below.
 
 ```javascript
 {
@@ -125,7 +126,7 @@ Name will return `Darth Vader` as expected but `attributes` will return the obje
 }
 ```
 
-On the otherhand `allNames` will return an array.
+On the other hand `allNames` will return an array.
 
 ```javascript
 ['Anakin Skywalker', 'Darth Vader']
@@ -197,3 +198,23 @@ function example() {
     console.log(flatObject.type())
 }
 ```
+
+## Behaviour Notes
+
+A few things worth knowing about how values round trip:
+
+- **`null` values are kept.** `flat({ a: null })` flattens to `{ 'a': null }` and hydrates back to `{ a: null }`.
+- **Empty objects and arrays are kept.** `flat({ a: {}, b: [] })` round trips to `{ a: {}, b: [] }`.
+- **Arrays are rebuilt only from contiguous indices.** An object whose keys are exactly `0..n-1` becomes an array on `get`. A string map that merely contains a `"0"` key, or a set of indices with gaps, is returned as an object so nothing is dropped or reordered.
+- **Non plain objects are opaque.** Instances of `Date`, `Map`, `RegExp`, class instances and the like are treated as leaf values. They are stored by reference and are not flattened into their internals.
+- **Prototype keys are ignored.** Path segments of `__proto__`, `constructor` or `prototype` are rejected by `set` and skipped during hydration, so a flattened key can never mutate the prototype chain.
+- **`set` and `upsert` require an object.** When `flat` was given a non object (a string, number, boolean or `null`), `set` and `upsert` return `false` instead of throwing, and `get` returns the original value.
+
+### Limitations
+
+The library targets plain nested data. Outside that it has sharp edges:
+
+- **The dot is the path separator.** An input key that already contains a `.` (for example `{ 'a.b': 1 }`) is split on `get`, so it comes back as `{ a: { b: 1 } }` rather than its original shape.
+- **Circular references throw.** `flat` recurses eagerly, so a value that references itself overflows the stack. Break cycles before flattening.
+- **Symbol keys are dropped.** Only string keys are walked.
+- **A non plain object as the root is not useful.** `flat(new Date())` does not throw, but flattens to `{}`. Pass a plain object.
